@@ -1,28 +1,55 @@
-import Link from "next/link"; // Assuming you are using Next.js for the Link component.
+"use client";
 
-// The Home component represents the main page of the application,
-// which in this case, is the Todos list page.
-export default function Home() {
+import { useState } from "react";
+import AddTodoForm from "../components/AddTodoForm";
+import TodoList from "../components/TodoList";
+
+const Page = () => {
+  const [todos, setTodos] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+
+  const addTodo = (e) => {
+    e.preventDefault();
+    if (!inputValue.trim()) return;
+    setTodos([...todos, { id: Date.now(), text: inputValue.trim(), completed: false }]);
+    setInputValue("");
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
   return (
-    <>
-      {/* This is the main header for the page. It uses flexbox to align
-        the heading and the "New" button on opposite ends.
-      */}
-      <header className="flex justify-between items-center mb-4">
-        {/* The main heading for the Todos page. */}
-        <h1 className="text-2xl text-white">Todos</h1>
+    <div className="min-h-screen flex flex-col items-center justify-start pt-16">
+      <h1 className="text-4xl font-extrabold mb-8 text-center text-emerald-400 drop-shadow-lg">
+        My Todo App
+      </h1>
 
-        {/* This is a navigation link to create a new todo.
-          The classes apply styling for a button-like appearance with hover and focus effects.
-          The corrected class is `border-slate-300`.
-        */}
-        <Link 
-          href="/new" 
-          className="border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none transition-colors duration-200"
-        >
-          New
-        </Link>
-      </header>
-    </>
+      <div className="w-full max-w-lg bg-slate-900 rounded-3xl shadow-2xl p-6 border border-slate-700">
+        {/* Add Todo Form */}
+        <AddTodoForm
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          addTodo={addTodo}
+        />
+
+        {/* Todo List */}
+        <TodoList
+          todos={todos}
+          toggleTodo={toggleTodo}
+          deleteTodo={deleteTodo}
+        />
+      </div>
+
+      <footer className="mt-10 text-slate-400 text-sm">
+        &copy; {new Date().getFullYear()} My Todo App
+      </footer>
+    </div>
   );
-}
+};
+
+export default Page;
