@@ -2,77 +2,62 @@
 
 name: Deploy Next.js to GitHub Pages
 
-# Run on pushes to the 'main' branch
 on:
   push:
     branches: ["main"]
-  # Allow you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Grant permissions for the workflow to deploy to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# This is your "concurrency" setting.
-# It ensures only one deployment runs at a time.
-# 'cancel-in-progress: true' handles your "build for latest commit" requirement.
-# If you push 5 commits, it will cancel the 4 older builds and only run the latest.
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1. Check out your repository code
       - name: Checkout
         uses: actions/checkout@v4
 
       # 2. Set up Node.js
-      # This action includes built-in caching for npm.
-      # This handles your "caching of node modules" requirement.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm" # Caches node_modules based on package-lock.json
+          cache: "npm"
+          # THIS IS THE CRITICAL FIX:
+          # Tell the cache where to find your lock file
+          cache-dependency-path: todo/package-lock.json
 
       # 3. Install dependencies
-      # 'npm ci' is faster and safer for workflows than 'npm install'
       - name: Install Dependencies
+        working-directory: ./todo
         run: npm ci
 
       # 4. Build your Next.js app
-      # This runs the 'next build' command from your package.json.
-      # Thanks to your next.config.js, this will create the static 'out/' folder.
       - name: Build
+        working-directory: ./todo
         run: npm run build
 
-      # 5. Upload the built 'out/' folder as an artifact
-      # The 'deploy' job will use this artifact.
+      # 5. Upload artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./out"
+          path: "./todo/out" # Make sure this path is correct
 
   # Deploy job
   deploy:
-    # This job needs the 'build' job to finish first
     needs: build
-    
-    # Use the official GitHub Pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-      
     runs-on: ubuntu-latest
     steps:
-      # 1. This is the official action to deploy the artifact to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        # This action automatically finds the artifact uploaded by 'upload-pages-artifact'
+
