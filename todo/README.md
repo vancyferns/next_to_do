@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+// ...existing code...
+# Todo (Next.js)
 
-## Getting Started
+A minimal Next.js + Tailwind CSS to-do app created with `create-next-app`.
 
-First, run the development server:
+## Quick start
+
+1. From the `todo` folder install dependencies and start the dev server:
 
 ```bash
+cd todo
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Edit the main UI in [todo/src/app/page.js](todo/src/app/page.js). The primary handlers are [`addTodo`](todo/src/app/page.js), [`toggleTodo`](todo/src/app/page.js), and [`deleteTodo`](todo/src/app/page.js). UI components live in:
+- [todo/src/components/AddTodoForm.jsx](todo/src/components/AddTodoForm.jsx)
+- [todo/src/components/TodoList.jsx](todo/src/components/TodoList.jsx)
+- [todo/src/components/TodoItem.jsx](todo/src/components/TodoItem.jsx)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See [todo/package.json](todo/package.json) for available scripts:
 
-## Learn More
+- npm run dev — start dev server
+- npm run build — build for production (static export)
+- npm run start — run production server
+- npm run lint — run ESLint
 
-To learn more about Next.js, take a look at the following resources:
+## Build & Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is configured for static export (see [todo/next.config.mjs](todo/next.config.mjs)). To build the static output:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd todo
+npm run build
+# Output is placed in ./todo/out
+```
 
-## Deploy on Vercel
+A GitHub Actions workflow at [.github/workflows/main.yml](.github/workflows/main.yml) uploads the `./todo/out` artifact and deploys to GitHub Pages.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Styling
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Tailwind/PostCSS are configured. See [todo/postcss.config.mjs](todo/postcss.config.mjs) and the Tailwind import in [todo/src/app/globals.css](todo/src/app/globals.css).
+
+## License
+
+MIT — see the repository LICENSE.
+{ changed code }
+// ...existing code...
