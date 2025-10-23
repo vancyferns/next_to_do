@@ -1,5 +1,3 @@
-// next.config.js
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -9,6 +7,7 @@ const nextConfig = {
   
   // 2. Set the basePath
   // REPLACE '<your-repo-name>' WITH YOUR REPO NAME
+  // You already have 'next_to_do' which looks correct.
   basePath: process.env.NODE_ENV === 'production' ? '/next_to_do' : '',
   
   // 3. Disable image optimization
@@ -17,4 +16,5 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Use ES Module syntax instead of module.exports
+export default nextConfig;
