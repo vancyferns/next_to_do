@@ -39,25 +39,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm" # Caches node_modules based on package-lock.json
+          cache: "npm"
+          # Point cache to the package-lock.json inside the 'todo' folder
+          cache-dependency-path: todo/package-lock.json
 
       # 3. Install dependencies
       # 'npm ci' is faster and safer for workflows than 'npm install'
       - name: Install Dependencies
+        # Run this command inside the 'todo' directory
+        working-directory: ./todo
         run: npm ci
 
       # 4. Build your Next.js app
       # This runs the 'next build' command from your package.json.
       # Thanks to your next.config.js, this will create the static 'out/' folder.
       - name: Build
+        # Run this command inside the 'todo' directory
+        working-directory: ./todo
         run: npm run build
 
       # 5. Upload the built 'out/' folder as an artifact
       # The 'deploy' job will use this artifact.
+      # The 'out' folder is located at './todo/out'
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./out"
+          path: "./todo/out"
 
   # Deploy job
   deploy:
